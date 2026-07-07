@@ -1,0 +1,644 @@
+{
+  "datasets": [
+    {
+      "name": "dataset1",
+      "displayName": "social_media_screentime_mental_health",
+      "config": {
+        "version": "1.1",
+        "source": "dbr_dev.pkustra555.social_media_screentime_mental_health",
+        "dimensions": [
+          {
+            "name": "participant_id",
+            "expr": "source.participant_id"
+          },
+          {
+            "name": "age",
+            "expr": "source.age"
+          },
+          {
+            "name": "gender",
+            "expr": "source.gender"
+          },
+          {
+            "name": "occupation",
+            "expr": "source.occupation"
+          },
+          {
+            "name": "region",
+            "expr": "source.region"
+          },
+          {
+            "name": "most_used_platform",
+            "expr": "source.most_used_platform"
+          },
+          {
+            "name": "platforms_used_count",
+            "expr": "source.platforms_used_count"
+          },
+          {
+            "name": "daily_screen_hours",
+            "expr": "source.daily_screen_hours"
+          },
+          {
+            "name": "daily_notifications",
+            "expr": "source.daily_notifications"
+          },
+          {
+            "name": "night_time_use",
+            "expr": "source.night_time_use"
+          },
+          {
+            "name": "minutes_to_first_check_after_waking",
+            "expr": "source.minutes_to_first_check_after_waking"
+          },
+          {
+            "name": "primary_purpose",
+            "expr": "source.primary_purpose"
+          },
+          {
+            "name": "avg_sleep_hours",
+            "expr": "source.avg_sleep_hours"
+          },
+          {
+            "name": "anxiety_score_0to27",
+            "expr": "source.anxiety_score_0to27"
+          },
+          {
+            "name": "low_mood_score_0to27",
+            "expr": "source.low_mood_score_0to27"
+          },
+          {
+            "name": "life_satisfaction_1to10",
+            "expr": "source.life_satisfaction_1to10"
+          },
+          {
+            "name": "loneliness_1to10",
+            "expr": "source.loneliness_1to10"
+          },
+          {
+            "name": "self_esteem_1to10",
+            "expr": "source.self_esteem_1to10"
+          },
+          {
+            "name": "fomo_1to10",
+            "expr": "source.fomo_1to10"
+          },
+          {
+            "name": "social_comparison_1to10",
+            "expr": "source.social_comparison_1to10"
+          },
+          {
+            "name": "physical_activity_days_per_week",
+            "expr": "source.physical_activity_days_per_week"
+          },
+          {
+            "name": "uses_screen_time_limits",
+            "expr": "source.uses_screen_time_limits"
+          },
+          {
+            "name": "attempted_digital_detox",
+            "expr": "source.attempted_digital_detox"
+          },
+          {
+            "name": "seeks_mental_health_support",
+            "expr": "source.seeks_mental_health_support"
+          },
+          {
+            "name": "wellbeing_band",
+            "expr": "source.wellbeing_band"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "displayName": "Count",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "page1",
+      "displayName": "New Page",
+      "layout": [
+        {
+          "widget": {
+            "name": "bar_chart1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dataset1",
+                  "fields": [
+                    {
+                      "name": "occupation",
+                      "expression": "`occupation`"
+                    },
+                    {
+                      "name": "avg(low_mood_score_0to27)",
+                      "expression": "AVG(`low_mood_score_0to27`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Average Low Mood Score by Occupation\n"
+              },
+              "mark": {
+                "colors": [
+                  "#42F8FF",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "occupation",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg(low_mood_score_0to27)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "text_box1",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Mental Health in Social Media\n",
+                "\n",
+                "Dashboard show the statistics about well-being of social media's users"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "average-anxiety-score-by-gender",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dataset1",
+                  "fields": [
+                    {
+                      "name": "avg(anxiety_score_0to27)",
+                      "expression": "AVG(`anxiety_score_0to27`)"
+                    },
+                    {
+                      "name": "gender",
+                      "expression": "`gender`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Average anxiety score by gender"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "avg(anxiety_score_0to27)",
+                  "displayName": "Average Anxiety Score",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "gender",
+                  "displayName": "Gender",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "users",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dataset1",
+                  "fields": [
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    },
+                    {
+                      "name": "most_used_platform",
+                      "expression": "`most_used_platform`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Social Media Platform Usage"
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of users"
+                },
+                "color": {
+                  "fieldName": "most_used_platform",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-self-esteem-score-platform",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dataset1",
+                  "fields": [
+                    {
+                      "name": "loneliness_1to10",
+                      "expression": "`loneliness_1to10`"
+                    },
+                    {
+                      "name": "avg(self_esteem_1to10)",
+                      "expression": "AVG(`self_esteem_1to10`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "annotations": [
+                {
+                  "type": "horizontal-line",
+                  "encodings": {
+                    "y": {
+                      "dataValue": "6",
+                      "dataType": "DOUBLE"
+                    }
+                  }
+                }
+              ],
+              "frame": {
+                "showTitle": true,
+                "title": "Average Self-Esteem Score by Loneliness"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "loneliness_1to10",
+                  "displayName": "Loneliness Score (1-10)",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg(self_esteem_1to10)",
+                  "displayName": "Average self-esteem",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "average-time-of-sleep-by-gender",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dataset1",
+                  "fields": [
+                    {
+                      "name": "avg(avg_sleep_hours)",
+                      "expression": "AVG(`avg_sleep_hours`)"
+                    },
+                    {
+                      "name": "life_satisfaction_1to10",
+                      "expression": "`life_satisfaction_1to10`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "annotations": [
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "6.9",
+                      "dataType": "DOUBLE"
+                    }
+                  }
+                }
+              ],
+              "frame": {
+                "showTitle": true,
+                "title": "Average Time of Sleep by Life Satisfaction\n\n",
+                "showDescription": false
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "avg(avg_sleep_hours)",
+                  "displayName": "Average Time of Sleep",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "life_satisfaction_1to10",
+                  "displayName": "Life Satisfaction",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 15,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
