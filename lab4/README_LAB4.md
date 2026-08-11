@@ -2,9 +2,11 @@
 
 ## Project Goal
 
-The goal of this lab was to build a reliable Silver-layer pipeline in Databricks that can handle both data changes and schema changes over time.
+The goal of this lab was to build a reliable, controlled Silver-layer pipeline in Databricks that can handle both data changes and schema changes over time.
 
-I used the Netflix titles dataset and designed the project as a small streaming pipeline rather than as a set of isolated examples. This allowed me to test ingestion, cleaning, deduplication, MERGE-based updates, schema enforcement, schema evolution, Delta column mapping, and table maintenance in one coherent workflow.
+I used the Netflix titles dataset and designed the project as a small streaming pipeline rather than as a set of isolated examples. This allowed me to test ingestion, cleaning, deduplication, MERGE-based updates, schema enforcement, schema evolution, Delta column mapping, and table maintenance in one coherent, controlled workflow.
+
+I could use event streaming, but I would rather focus on the silver layer and controlled pipeline. 
 
 ## Architecture
 
@@ -180,6 +182,9 @@ The project validates several Silver-layer quality conditions:
 
 These checks are useful for detecting data-quality problems independently from schema enforcement. A value can have the correct data type and still be logically invalid.
 
+Also during tests, before continuing the pipeline I tested if everything is okay by pushing one query.
+
+
 ## Reliability and Re-runs
 
 The streaming queries use checkpoints to track processed input.
@@ -188,7 +193,9 @@ The Silver pipeline also uses MERGE instead of unconditional append. This means 
 
 A duplicate check on `show_id` is used as an additional verification of Silver-table integrity.
 
-The pipeline was also scheduled and executed as a Databricks Job.
+During tests the pipeline was also scheduled and executed as a Databricks Job.
+
+Before running the complete pipeline, I first tested the workflow with a single record to verify that the data was processed correctly through the pipeline. After confirming that the test record was handled as expected, I continued with the remaining batches.
 
 ## Table Maintenance
 
@@ -219,28 +226,3 @@ Z-ORDER tries to organize data so that values frequently used in filters are sto
 Liquid Clustering is a newer and more flexible approach to managing the physical layout of data. It provides more flexibility than traditional partitioning and Z-ORDER, especially when data and access patterns change over time.
 
 The main trade-off is flexibility. Classic partitioning requires the layout decision earlier, Z-ORDER is an optimization applied to selected columns, while Liquid Clustering is designed to make the layout easier to evolve as workloads change.
-
-## Final Result
-
-The completed pipeline demonstrates:
-
-- incremental ingestion with Auto Loader,
-- Bronze and Silver layering,
-- metadata columns,
-- Silver cleaning and enrichment,
-- deduplication,
-- Delta MERGE,
-- SCD Type 1,
-- schema enforcement,
-- schema evolution,
-- adding new columns,
-- type widening,
-- Delta column mapping,
-- data-quality validation,
-- checkpoint-based reliability,
-- scheduled execution,
-- OPTIMIZE,
-- VACUUM,
-- understanding of partitioning, Z-ORDER, Liquid Clustering, and Data Contracts.
-
-The final Silver table is designed to remain clean and usable while the incoming data and schema evolve over time.
