@@ -1,0 +1,105 @@
+# lab5_declarative_pipeline
+
+The goal of Lab 5 was to build a data pipeline using Lakeflow
+Declarative Pipelines and compare this approach with the classic Spark
+pipeline implemented in Lab 4.
+
+The solution uses the Netflix dataset and follows a Bronze--Silver
+processing flow. The project is also configured as a Databricks
+Declarative Automation Bundle, which allows the pipeline configuration
+to be parameterized for different environments.
+
+##Input data preparation 
+
+The source Netflix CSV file is divided into three batches to simulate incremental data arrival.
+
+Batch 1 contains the initial dataset.
+
+Batch 2 is used to simulate changes to existing data and
+duplicate records.
+
+Batch 3 introduces the additional imdb_rating column to test
+schema evolution.
+
+The prepared batches are copied one by one into the landing directory,
+which makes it possible to observe how the pipeline behaves when new
+data arrives.
+
+## Bronze layer
+
+The Bronze layer represents the raw ingestion stage of the pipeline.
+
+The streaming source is based on files arriving in the landing
+directory. The purpose of this layer is to ingest incoming data before
+applying the business transformations required in the Silver layer.
+
+The pipeline therefore separates data ingestion from later cleaning,
+validation, enrichment, and historical processing.
+
+## Silver processing
+
+The Silver processing stage cleans and prepares the Netflix data for
+further use.
+
+The pipeline contains multiple datasets representing separate processing
+responsibilities. Instead of manually defining the execution order,
+dependencies are created through references between datasets. Lakeflow
+analyzes these dependencies and builds the execution graph
+automatically.
+
+The pipeline contains, among others:
+
+- `bronze_netflix`
+- `cleaned_netflix`
+- `quarantine_netflix`
+- `rating_reference`
+- `silver_prepared`
+- `silver_netflix`
+
+This structure also makes the data flow visible directly in the pipeline
+UI.
+
+##Data quality and quarantine
+
+Data quality rules are implemented using expectations.
+he validation rules include checks such as:
+
+- `show_id` must not be null,
+- `title` must not be null,
+- `type` must contain an expected value,
+- `release_year` must be within the expected range.
+
+Invalid records can be separated into the `quarantine_netflix` dataset,
+allowing incorrect data to be inspected without mixing it with the valid
+processing path. (`quarantine_netflix` was created to follow best practises)
+
+## Batch / reference data
+In addition to the streaming source, the pipeline uses reference data
+through `rating_reference`.
+
+This demonstrates that a declarative pipeline can combine streaming
+processing with non-streaming reference data. The reference dataset
+participates in the dependency graph and is used during preparation of
+the Silver data.
+
+## Safe reload
+Safe reload was tested by running the pipeline again without
+adding new source data.
+
+After the second execution, the number of records did not increase, so the pipeline didn't add another copy. 
+
+## Data lineage and monitoring 
+
+![image_1786875115689.png](./image_1786875115689.png "image_1786875115689.png")
+[view from the databricks free account]
+
+##Classic Spark pipelines vs declarative pipelines 
+
+In Lab 4, using classic Spark, I was responsible for defining how the pipeline should execute. I created separate processing steps and controlled their execution order. In Lab 5, I mainly define the datasets and their relationships. Lakeflow analyzes and understands these dependencies and automatically creates the execution graph, order. 
+
+In both labs, I implemented the SCD Type 2. In lab4, I had to manually implement change detection and the logic for closing old records and inserting new versions. In Lab5, I declare the
+SCD behavior and Lakeflow manages the historical versions automatically. 
+
+In Lab4, data quality rules were implemented as normal Spark transformations. In Lab 5, I defined expectations. Data quality became part of the pipeline. Also the pipeline UI automatically shows the data flow, execution status. In lab4 I had to monitor the individual notebooks, jobs and tables to understand more of the processing flow.
+
+Declarative pipelines provide more operational simplicity because Lakeflow handles more of the orchestration and pipeline management automatically such as dataset dependencies, execution order, monitor, SCD Type 2 (less code is needed and the pipeline is easier to maintain). Classic Spark pipelines require more manual work, more code, but they provide more flexibility, control. It is easier to introduce custom processing logic. The cost mainly depends on the compute resources used and how the pipeline is execute. Lakeflow can perform incremental processing, processing new/changed data instead of recomputing the entire dataset every time, but frequent pipeline updates, huge number of transformations can increase the cost. 
