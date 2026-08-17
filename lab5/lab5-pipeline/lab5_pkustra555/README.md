@@ -10,16 +10,16 @@ Declarative Automation Bundle, which allows the pipeline configuration
 to be parameterized for different environments.
 
 ##Input data preparation 
+The project includes helper notebooks in folder helpers for preparing and simulating incremental data ingestion:
 
-The source Netflix CSV file is divided into three batches to simulate incremental data arrival.
+- `00_setup` prepares the required directories and data locations.
+- `01_prepare_stream_batches` splits the source Netflix dataset into batches used to simulate incremental data arrival.
+- `01a_load_batch` copies a selected batch into the landing directory, simulating the arrival of new source data.
 
-Batch 1 contains the initial dataset.
-
-Batch 2 is used to simulate changes to existing data and
-duplicate records.
-
-Batch 3 introduces the additional imdb_rating column to test
-schema evolution.
+Description of batches: 
+- Batch 1 contains the initial dataset.
+- Batch 2 is used to simulate changes to existing data and duplicate records.
+- Batch 3 introduces the additional imdb_rating column to test schema evolution.
 
 The prepared batches are copied one by one into the landing directory,
 which makes it possible to observe how the pipeline behaves when new

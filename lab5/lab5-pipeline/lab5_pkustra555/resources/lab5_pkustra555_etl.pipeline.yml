@@ -1,23 +1,23 @@
-# The main pipeline for lab5_declarative_pipeline
+# The main pipeline for lab5_pkustra555
 
 resources:
   pipelines:
-    lab5_declarative_pipeline_etl:
-      name: lab5_declarative_pipeline_etl
+    lab5_pkustra555_etl:
+      name: lab5_pkustra555_etl
       catalog: ${var.catalog}
       schema: ${var.bronze_schema}
-      
+
       configuration:
         catalog: ${var.catalog}
         bronze_schema: ${var.bronze_schema}
         silver_schema: ${var.silver_schema}
         title: netflix_titles
       serverless: true
-      root_path: "../src/lab5_declarative_pipeline_etl"
+      root_path: "../src/lab5_pkustra555_etl"
 
       libraries:
         - glob:
-            include: ../src/lab5_declarative_pipeline_etl/transformations/**
+            include: ../src/lab5_pkustra555_etl/transformations/**
 
       environment:
         dependencies:

@@ -1,0 +1,37 @@
+# A job for lab5_pkustra555.
+resources:
+  jobs:
+    lab5_process_batch:
+      name: lab5_process_batch
+
+      parameters:
+        - name: batch_id
+          default: "1"
+
+        - name: catalog
+          default: ${var.catalog}
+
+        - name: bronze_schema
+          default: ${var.bronze_schema}
+
+        - name: silver_schema
+          default: ${var.silver_schema}
+
+        - name: title
+          default: ${var.title}
+
+      tasks:
+        - task_key: load_batch
+          notebook_task:
+            notebook_path: ../helpers/01a_load_batch.ipynb
+
+        - task_key: refresh_pipeline
+          depends_on:
+            - task_key: load_batch
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.lab5_pkustra555_etl.id}
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"

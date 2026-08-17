@@ -1,0 +1,53 @@
+# A job for lab5_pkustra555.
+resources:
+  jobs:
+    lab5_main:
+      name: lab5_main
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+
+        - name: bronze_schema
+          default: ${var.bronze_schema}
+
+        - name: silver_schema
+          default: ${var.silver_schema}
+
+        - name: title
+          default: ${var.title}
+
+      tasks:
+        - task_key: setup
+          notebook_task:
+            notebook_path: ../helpers/00_setup.ipynb
+        
+        - task_key: prepare_batches
+          depends_on:
+            - task_key: setup
+          notebook_task:
+            notebook_path: ../helpers/01_prepare_stream_batches.ipynb
+        
+        - task_key: process_stream_batches
+          depends_on:
+            - task_key: prepare_batches
+          
+          for_each_task:
+            inputs: "[1,2,3]"
+            concurrency: 1
+
+            task:
+              task_key: process_batch
+              run_job_task:
+                job_id: ${resources.jobs.lab5_process_batch.id}
+                job_parameters:
+                  batch_id: "{{input}}"
+                  catalog: "{{job.parameters.catalog}}"
+                  bronze_schema: "{{job.parameters.bronze_schema}}"
+                  silver_schema: "{{job.parameters.silver_schema}}"
+                  title: "{{job.parameters.title}}"
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
