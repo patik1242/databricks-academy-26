@@ -1,0 +1,744 @@
+{
+  "datasets": [
+    {
+      "name": "df46527d",
+      "displayName": "type_count",
+      "config": {
+        "version": "1.1",
+        "source": "dbr_dev.pkustra555_gold.gold_titles_by_type",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "2bebbd17",
+      "displayName": "release_period_count",
+      "config": {
+        "version": "1.1",
+        "source": "dbr_dev.pkustra555_gold.gold_titles_by_release_period",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bb76fc04",
+      "displayName": "audience_category",
+      "queryLines": [
+        "SELECT *\r\n",
+        "FROM dbr_dev.pkustra555_gold.gold_titles_by_audience\r\n",
+        "WHERE audience_category IS NOT NULL"
+      ]
+    },
+    {
+      "name": "2661cc02",
+      "displayName": "Summary",
+      "queryLines": [
+        "SELECT f.show_id, f.title_count, t.type, r.rating, r.audience_category, y.release_year, y.release_period  \r\n",
+        "FROM dbr_dev.pkustra555_gold.fact_tiles f\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_type t\r\n",
+        "    ON f.type_key = t.type_key\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_rating r\r\n",
+        "    ON f.rating_key = r.rating_key\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_release_year y\r\n",
+        "    ON f.release_year_key = y.release_year_key\r\n",
+        "WHERE r.audience_category IS NOT NULL"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "eb5ef5ce",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "e47878bc",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"font-size: 48px;line-height: 1.5;font-family: Arial;\">Netflix Content Analysis</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "total-count",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "df46527d",
+                  "fields": [
+                    {
+                      "name": "total_count",
+                      "expression": "`total_count`"
+                    },
+                    {
+                      "name": "type",
+                      "expression": "`type`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 1
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "frame": {
+                "showDescription": true,
+                "showTitle": true,
+                "title": "Movies vs TV Shows",
+                "description": "Distribution of Netflix titles by content type"
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "total_count",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Total Count"
+                },
+                "color": {
+                  "fieldName": "type",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Movie",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 4
+                        }
+                      },
+                      {
+                        "value": "TV Show",
+                        "color": "#979797"
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "type"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "titles",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "bb76fc04",
+                  "fields": [
+                    {
+                      "name": "title_count",
+                      "expression": "`title_count`"
+                    },
+                    {
+                      "name": "audience_category",
+                      "expression": "`audience_category`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": "Titles by Audience Category",
+                "description": "Distribution of Netflix titles across audience categories."
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "title_count",
+                  "displayName": "Number of titles",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "audience_category",
+                  "displayName": "Audience Category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 4,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "titles-by",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2bebbd17",
+                  "fields": [
+                    {
+                      "name": "release_period",
+                      "expression": "`release_period`"
+                    },
+                    {
+                      "name": "title_count",
+                      "expression": "`title_count`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": "Titles by Release Period",
+                "description": "Distribution of Netflix titles across different release periods."
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "release_period",
+                  "displayName": "Release Period",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "title_count",
+                  "displayName": "Title Count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "total-titles-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "sum(title_count)",
+                      "expression": "SUM(`title_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Total Titles"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(title_count)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "45c0f585",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "sum(title_count)",
+                      "expression": "SUM(`title_count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`type` IN ('Movie')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Movies"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(title_count)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    },
+                    "significantFigures": {
+                      "type": "all"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "915a2de0",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "sum(title_count)",
+                      "expression": "SUM(`title_count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`type` IN ('TV Show')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "TV Shows"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(title_count)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "cfad1f6b",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "type",
+            "queries": [
+              {
+                "name": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_type",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "type",
+                      "expression": "`type`"
+                    },
+                    {
+                      "name": "type_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Type"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "type",
+                    "queryName": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_type"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "audience-category",
+            "queries": [
+              {
+                "name": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_audience_category",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "audience_category",
+                      "expression": "`audience_category`"
+                    },
+                    {
+                      "name": "audience_category_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "disallowAll": false,
+              "frame": {
+                "showTitle": true,
+                "title": "Audience Category"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "audience_category",
+                    "queryName": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_audience_category"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "release-period",
+            "queries": [
+              {
+                "name": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_release_period",
+                "query": {
+                  "datasetName": "2661cc02",
+                  "fields": [
+                    {
+                      "name": "release_period",
+                      "expression": "`release_period`"
+                    },
+                    {
+                      "name": "release_period_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Release Period"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "release_period",
+                    "queryName": "dashboards/01f19ed782e71bcd95dc63bf50a40a35/datasets/01f19ee22a3b1612a7daca7e6fecc909_release_period"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

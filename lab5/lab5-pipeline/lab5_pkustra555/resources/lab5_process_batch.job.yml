@@ -17,6 +17,9 @@ resources:
         - name: silver_schema
           default: ${var.silver_schema}
 
+        - name: gold_schema
+          default: ${var.gold_schema}
+
         - name: title
           default: ${var.title}
 

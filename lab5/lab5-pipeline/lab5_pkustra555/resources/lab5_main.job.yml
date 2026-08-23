@@ -14,6 +14,9 @@ resources:
         - name: silver_schema
           default: ${var.silver_schema}
 
+        - name: gold_schema
+          default: ${var.gold_schema}
+
         - name: title
           default: ${var.title}
 
@@ -45,6 +48,7 @@ resources:
                   catalog: "{{job.parameters.catalog}}"
                   bronze_schema: "{{job.parameters.bronze_schema}}"
                   silver_schema: "{{job.parameters.silver_schema}}"
+                  gold_schema: "{{job.parameters.gold_schema}}"
                   title: "{{job.parameters.title}}"
 
       environments:

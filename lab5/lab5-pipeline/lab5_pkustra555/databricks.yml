@@ -18,6 +18,9 @@ variables:
   silver_schema:
     description: Silver schema
 
+  gold_schema:
+    description: Gold schema
+
   title:
     description: title of used dataset
 
@@ -38,6 +41,7 @@ targets:
       catalog: dbr_dev
       bronze_schema: pkustra555_bronze
       silver_schema: pkustra555_silver
+      gold_schema: pkustra555_gold
       title: netflix_titles
   prod:
     mode: production
@@ -49,6 +53,7 @@ targets:
       catalog: dbr_dev
       bronze_schema: pkustra555_bronze
       silver_schema: pkustra555_silver
+      gold_schema: pkustra555_gold
       title: netflix_titles
     permissions:
       - user_name: pkustra555@softserve.academy

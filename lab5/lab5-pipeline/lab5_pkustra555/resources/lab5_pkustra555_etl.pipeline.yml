@@ -11,6 +11,7 @@ resources:
         catalog: ${var.catalog}
         bronze_schema: ${var.bronze_schema}
         silver_schema: ${var.silver_schema}
+        gold_schema: ${var.gold_schema}
         title: netflix_titles
       serverless: true
       root_path: "../src/lab5_pkustra555_etl"
@@ -24,3 +25,19 @@ resources:
           # We include every dependency defined by pyproject.toml by defining an editable environment
           # that points to the folder where pyproject.toml is deployed.
           - --editable ${workspace.file_path}
+
+# schemas:
+#   bronze_schema:
+#     name: ${var.bronze_schema}
+#
+#   silver_schema:
+#     name: ${var.silver_schema}
+#
+#   gold_schema:
+#     name: ${var.gold_schema}
+# volumes:
+#   raw_volume:
+#     name: ${var.volume_name}
+#     catalog_name: ${var.catalog}
+#     schema_name: ${var.bronze_schema}
+#     volume_type: MANAGED

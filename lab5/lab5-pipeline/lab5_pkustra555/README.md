@@ -103,3 +103,47 @@ SCD behavior and Lakeflow manages the historical versions automatically.
 In Lab4, data quality rules were implemented as normal Spark transformations. In Lab 5, I defined expectations. Data quality became part of the pipeline. Also the pipeline UI automatically shows the data flow, execution status. In lab4 I had to monitor the individual notebooks, jobs and tables to understand more of the processing flow.
 
 Declarative pipelines provide more operational simplicity because Lakeflow handles more of the orchestration and pipeline management automatically such as dataset dependencies, execution order, monitor, SCD Type 2 (less code is needed and the pipeline is easier to maintain). Classic Spark pipelines require more manual work, more code, but they provide more flexibility, control. It is easier to introduce custom processing logic. The cost mainly depends on the compute resources used and how the pipeline is execute. Lakeflow can perform incremental processing, processing new/changed data instead of recomputing the entire dataset every time, but frequent pipeline updates, huge number of transformations can increase the cost. 
+
+# LAB6: Gold Layer, AI/BI and Governance
+## Overview
+Extension of the Netflix data pipeline with a Gold layer, analytical dashboard,
+alerting, governance mechanisms and AI/BI Genie.
+
+## Gold Layer
+- Aggregated datasets
+- Dimension tables
+- Fact table
+- Basic star schema
+
+## AI/BI Dashboard
+- Total titles, Movies and TV Shows KPIs
+- Content type distribution
+- Audience category analysis
+- Release period analysis
+- Interactive filters
+
+![image_1787509500147.png](./image_1787509500147.png "image_1787509500147.png")
+![image_1787509539140.png](./image_1787509539140.png "image_1787509539140.png")
+
+## Alerting
+An SQL alert was configured to detect a significant drop in title volume
+and send an email notification.
+
+![image_1787509631952.png](./image_1787509631952.png "image_1787509631952.png")
+
+## Governance
+Unity Catalog governance mechanisms were demonstrated using:
+- GRANT permissions
+- Row-Level Security (RLS)
+- Column-Level Security (CLS)
+
+Dedicated test data was used to demonstrate the security policies without
+affecting the production Gold tables (everything in `/governance/07_governance` )
+
+## AI/BI Genie
+A Genie Agent was configured for natural-language analysis of the Gold layer.
+It can answer analytical questions and generate visualizations based on the data.
+
+![image_1787510228441.png](./image_1787510228441.png "image_1787510228441.png")
+![image_1787510251861.png](./image_1787510251861.png "image_1787510251861.png")
+![image_1787510272385.png](./image_1787510272385.png "image_1787510272385.png")
