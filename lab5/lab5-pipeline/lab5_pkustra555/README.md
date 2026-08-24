@@ -90,7 +90,7 @@ After the second execution, the number of records did not increase, so the pipel
 
 ## Data lineage and monitoring 
 
-![image_1786875115689.png](./image_1786875115689.png "image_1786875115689.png")
+![image_1787561574351.png](./image_1787561574351.png "image_1787561574351.png")
 [view from the databricks free account]
 
 ##Classic Spark pipelines vs declarative pipelines 
@@ -124,6 +124,29 @@ alerting, governance mechanisms and AI/BI Genie.
 
 ![image_1787509500147.png](./image_1787509500147.png "image_1787509500147.png")
 ![image_1787509539140.png](./image_1787509539140.png "image_1787509539140.png")
+
+## Business Questions & Insights
+
+#### How is the catalog distributed between Movies and TV Shows?
+The content type distribution shows whether the catalog is dominated by Movies
+or maintains a balance between Movies and TV Shows.
+
+**Business value:** Supports content portfolio planning and helps identify
+potential gaps in the catalog.
+
+#### Which audience segments dominate the catalog?
+Audience category analysis shows which viewer groups are most strongly
+represented in the available content.
+
+**Business value:** Helps evaluate whether the catalog is diversified across
+different target audiences.
+
+#### How modern is the content catalog?
+Release period analysis shows how much of the catalog consists of recent
+productions compared with older content.
+
+**Business value:** Helps identify whether the catalog is focused on recent
+content or relies heavily on legacy titles.
 
 ## Alerting
 An SQL alert was configured to detect a significant drop in title volume
