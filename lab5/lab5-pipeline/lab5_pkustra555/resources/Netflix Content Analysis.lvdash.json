@@ -1,70 +1,189 @@
 {
   "datasets": [
     {
-      "name": "df46527d",
-      "displayName": "type_count",
-      "config": {
-        "version": "1.1",
-        "source": "dbr_dev.pkustra555_gold.gold_titles_by_type",
-        "dimensions": [
-          {
-            "expr": "source.*"
-          }
-        ],
-        "measures": [
-          {
-            "name": "count",
-            "expr": "COUNT(*)",
-            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
-            "displayName": "Count"
-          }
-        ]
-      }
-    },
-    {
-      "name": "2bebbd17",
-      "displayName": "release_period_count",
-      "config": {
-        "version": "1.1",
-        "source": "dbr_dev.pkustra555_gold.gold_titles_by_release_period",
-        "dimensions": [
-          {
-            "expr": "source.*"
-          }
-        ],
-        "measures": [
-          {
-            "name": "count",
-            "expr": "COUNT(*)",
-            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
-            "displayName": "Count"
-          }
-        ]
-      }
-    },
-    {
-      "name": "bb76fc04",
-      "displayName": "audience_category",
-      "queryLines": [
-        "SELECT *\r\n",
-        "FROM dbr_dev.pkustra555_gold.gold_titles_by_audience\r\n",
-        "WHERE audience_category IS NOT NULL"
-      ]
-    },
-    {
       "name": "2661cc02",
       "displayName": "Summary",
       "queryLines": [
-        "SELECT f.show_id, f.title_count, t.type, r.rating, r.audience_category, y.release_year, y.release_period  \r\n",
-        "FROM dbr_dev.pkustra555_gold.fact_tiles f\r\n",
-        "LEFT JOIN dbr_dev.pkustra555_gold.dim_type t\r\n",
-        "    ON f.type_key = t.type_key\r\n",
-        "LEFT JOIN dbr_dev.pkustra555_gold.dim_rating r\r\n",
-        "    ON f.rating_key = r.rating_key\r\n",
-        "LEFT JOIN dbr_dev.pkustra555_gold.dim_release_year y\r\n",
-        "    ON f.release_year_key = y.release_year_key\r\n",
-        "WHERE r.audience_category IS NOT NULL"
+        "SELECT\r\n",
+        "    f.event_id,s.show_id,s.title, s.type, s.rating, s.audience_category,s.release_year, s.release_period, d.view_date, d.year,d.month, \r\n",
+        "    u.user_id, f.view_count, f.rate\r\n",
+        "FROM dbr_dev.pkustra555_gold.fact_views f\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_show s\r\n",
+        "    ON f.show_key = s.show_key\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_date d\r\n",
+        "    ON f.date_key = d.date_key\r\n",
+        "LEFT JOIN dbr_dev.pkustra555_gold.dim_user u\r\n",
+        "    ON f.user_key = u.user_key\r\n",
+        "WHERE s.audience_category IS NOT NULL"
       ]
+    },
+    {
+      "name": "e13a06e1",
+      "displayName": "count_kpi",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    COUNT(*) AS total_titles,\r\n    SUM(CASE WHEN type = 'Movie' THEN 1 ELSE 0 END) AS total_movies,\r\n    SUM(CASE WHEN type = 'TV Show' THEN 1 ELSE 0 END) AS total_tv_shows\r\nFROM dbr_dev.pkustra555_gold.dim_show",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "2edb0dec",
+      "displayName": "movies_tv_shows",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    type,\r\n    COUNT(*) AS total_titles\r\nFROM dbr_dev.pkustra555_gold.dim_show\r\nGROUP BY type\r\n",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "697f2bb6",
+      "displayName": "audience_category",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    audience_category,\r\n    COUNT(*) AS total_titles\r\nFROM dbr_dev.pkustra555_gold.dim_show\r\nWHERE audience_category IS NOT NULL\r\nGROUP BY audience_category\r\n",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cab33d4d",
+      "displayName": "release_period",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    release_period,\r\n    COUNT(*) AS total_titles\r\nFROM dbr_dev.pkustra555_gold.dim_show\r\nWHERE release_period IS NOT NULL\r\nGROUP BY release_period",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "10066068",
+      "displayName": "total_views",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    SUM(view_count) AS total_views,\r\n    COUNT(DISTINCT user_key) AS unique_viewers,\r\n    ROUND(AVG(rate), 2) AS avg_rating\r\nFROM dbr_dev.pkustra555_gold.fact_views",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a80e0bb0",
+      "displayName": "top10_watched",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    title,\r\n    total_views,\r\n    avg_rate,\r\n    unique_viewers\r\nFROM dbr_dev.pkustra555_gold.gold_views_by_show\r\nORDER BY total_views DESC\r\nLIMIT 10",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "7ea2bc54",
+      "displayName": "views_over_time",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    view_date,\r\n    total_views,\r\n    unique_viewers,\r\n    avg_rate\r\nFROM dbr_dev.pkustra555_gold.gold_views_by_date\r\nORDER BY view_date",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "575679db",
+      "displayName": "top10_rated",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT\r\n    title,\r\n    total_views,\r\n    avg_rate\r\nFROM dbr_dev.pkustra555_gold.gold_views_by_show\r\nWHERE total_views >= 5\r\nORDER BY avg_rate DESC, total_views DESC\r\nLIMIT 10",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
     }
   ],
   "pages": [
@@ -95,22 +214,28 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "df46527d",
+                  "datasetName": "2edb0dec",
                   "fields": [
                     {
-                      "name": "total_count",
-                      "expression": "`total_count`"
+                      "name": "sum(total_titles)",
+                      "expression": "SUM(`total_titles`)"
                     },
                     {
                       "name": "type",
                       "expression": "`type`"
                     }
                   ],
-                  "disaggregated": true
+                  "disaggregated": false
                 }
               }
             ],
             "spec": {
+              "frame": {
+                "showDescription": true,
+                "showTitle": true,
+                "title": "Movies vs TV Shows",
+                "description": "Distribution of Netflix titles by content type"
+              },
               "version": 3,
               "mark": {
                 "colors": [
@@ -156,20 +281,14 @@
                   }
                 ]
               },
-              "frame": {
-                "showDescription": true,
-                "showTitle": true,
-                "title": "Movies vs TV Shows",
-                "description": "Distribution of Netflix titles by content type"
-              },
               "widgetType": "pie",
               "encodings": {
                 "angle": {
-                  "fieldName": "total_count",
+                  "fieldName": "sum(total_titles)",
                   "scale": {
                     "type": "quantitative"
                   },
-                  "displayName": "Total Count"
+                  "displayName": "Count of titles"
                 },
                 "color": {
                   "fieldName": "type",
@@ -185,7 +304,10 @@
                       },
                       {
                         "value": "TV Show",
-                        "color": "#979797"
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 9
+                        }
                       }
                     ]
                   }
@@ -218,11 +340,11 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "bb76fc04",
+                  "datasetName": "697f2bb6",
                   "fields": [
                     {
-                      "name": "title_count",
-                      "expression": "`title_count`"
+                      "name": "total_titles",
+                      "expression": "`total_titles`"
                     },
                     {
                       "name": "audience_category",
@@ -234,13 +356,13 @@
               }
             ],
             "spec": {
-              "version": 3,
               "frame": {
                 "showTitle": true,
                 "showDescription": true,
                 "title": "Titles by Audience Category",
                 "description": "Distribution of Netflix titles across audience categories."
               },
+              "version": 3,
               "mark": {
                 "colors": [
                   {
@@ -288,7 +410,7 @@
               "widgetType": "bar",
               "encodings": {
                 "x": {
-                  "fieldName": "title_count",
+                  "fieldName": "total_titles",
                   "displayName": "Number of titles",
                   "scale": {
                     "type": "quantitative"
@@ -296,7 +418,7 @@
                 },
                 "y": {
                   "fieldName": "audience_category",
-                  "displayName": "Audience Category",
+                  "displayName": "audience category",
                   "scale": {
                     "type": "categorical"
                   }
@@ -321,29 +443,29 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "2bebbd17",
+                  "datasetName": "cab33d4d",
                   "fields": [
                     {
                       "name": "release_period",
                       "expression": "`release_period`"
                     },
                     {
-                      "name": "title_count",
-                      "expression": "`title_count`"
+                      "name": "sum(total_titles)",
+                      "expression": "SUM(`total_titles`)"
                     }
                   ],
-                  "disaggregated": true
+                  "disaggregated": false
                 }
               }
             ],
             "spec": {
-              "version": 3,
               "frame": {
                 "showTitle": true,
                 "showDescription": true,
                 "title": "Titles by Release Period",
                 "description": "Distribution of Netflix titles across different release periods."
               },
+              "version": 3,
               "mark": {
                 "colors": [
                   {
@@ -398,8 +520,8 @@
                   }
                 },
                 "y": {
-                  "fieldName": "title_count",
-                  "displayName": "Title Count",
+                  "fieldName": "sum(total_titles)",
+                  "displayName": "Count of titles",
                   "scale": {
                     "type": "quantitative"
                   }
@@ -424,34 +546,34 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "2661cc02",
+                  "datasetName": "e13a06e1",
                   "fields": [
                     {
-                      "name": "sum(title_count)",
-                      "expression": "SUM(`title_count`)"
+                      "name": "total_titles",
+                      "expression": "`total_titles`"
                     }
                   ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
-              "version": 2,
               "frame": {
                 "showTitle": true,
                 "showDescription": false,
                 "title": "Total Titles"
               },
+              "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(title_count)",
+                  "fieldName": "total_titles",
                   "format": {
                     "type": "number-plain",
                     "abbreviation": "none",
                     "decimalPlaces": {
                       "type": "max",
-                      "places": 3
+                      "places": 2
                     }
                   }
                 }
@@ -475,41 +597,32 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "2661cc02",
+                  "datasetName": "e13a06e1",
                   "fields": [
                     {
-                      "name": "sum(title_count)",
-                      "expression": "SUM(`title_count`)"
+                      "name": "total_movies",
+                      "expression": "`total_movies`"
                     }
                   ],
-                  "filters": [
-                    {
-                      "expression": "`type` IN ('Movie')"
-                    }
-                  ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
-              "version": 2,
               "frame": {
                 "showTitle": true,
                 "showDescription": false,
                 "title": "Movies"
               },
+              "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(title_count)",
+                  "fieldName": "total_movies",
                   "format": {
                     "type": "number-plain",
                     "abbreviation": "none",
                     "decimalPlaces": {
-                      "type": "max",
-                      "places": 2
-                    },
-                    "significantFigures": {
                       "type": "all"
                     }
                   }
@@ -534,39 +647,33 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "2661cc02",
+                  "datasetName": "e13a06e1",
                   "fields": [
                     {
-                      "name": "sum(title_count)",
-                      "expression": "SUM(`title_count`)"
+                      "name": "total_tv_shows",
+                      "expression": "`total_tv_shows`"
                     }
                   ],
-                  "filters": [
-                    {
-                      "expression": "`type` IN ('TV Show')"
-                    }
-                  ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
-              "version": 2,
               "frame": {
                 "showTitle": true,
                 "showDescription": false,
                 "title": "TV Shows"
               },
+              "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(title_count)",
+                  "fieldName": "total_tv_shows",
                   "format": {
                     "type": "number-plain",
                     "abbreviation": "none",
                     "decimalPlaces": {
-                      "type": "max",
-                      "places": 3
+                      "type": "all"
                     }
                   }
                 }
@@ -581,6 +688,463 @@
             "y": 2,
             "width": 4,
             "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "7a8cc2af",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "10066068",
+                  "fields": [
+                    {
+                      "name": "total_views",
+                      "expression": "`total_views`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Total Views"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_views",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "all"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "2047135a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "10066068",
+                  "fields": [
+                    {
+                      "name": "avg_rating",
+                      "expression": "`avg_rating`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Average Rate\n"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg_rating",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "all"
+                    },
+                    "significantFigures": {
+                      "type": "exact",
+                      "figures": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 16,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "59776f96",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "10066068",
+                  "fields": [
+                    {
+                      "name": "unique_viewers",
+                      "expression": "`unique_viewers`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Unique Viewers\n"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "unique_viewers",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "all"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 16,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "top-10-watched-shows",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a80e0bb0",
+                  "fields": [
+                    {
+                      "name": "total_views",
+                      "expression": "`total_views`"
+                    },
+                    {
+                      "name": "title",
+                      "expression": "`title`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Top 10 watched shows"
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "total_views",
+                  "displayName": "Total number of views",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "title",
+                  "displayName": "Titles",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 18,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "views-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7ea2bc54",
+                  "fields": [
+                    {
+                      "name": "monthly(view_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `view_date`)"
+                    },
+                    {
+                      "name": "sum(total_views)",
+                      "expression": "SUM(`total_views`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Views over time"
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(view_date)",
+                  "displayName": "Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_views)",
+                  "displayName": "Total number of views",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 24,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top-10-rated",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "575679db",
+                  "fields": [
+                    {
+                      "name": "avg_rate",
+                      "expression": "`avg_rate`"
+                    },
+                    {
+                      "name": "title",
+                      "expression": "`title`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Top Rated Titles"
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "avg_rate",
+                  "displayName": "Average Rate",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "title",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 30,
+            "width": 12,
+            "height": 6
           }
         }
       ],

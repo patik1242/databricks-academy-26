@@ -124,6 +124,9 @@ alerting, governance mechanisms and AI/BI Genie.
 
 ![image_1787509500147.png](./image_1787509500147.png "image_1787509500147.png")
 ![image_1787509539140.png](./image_1787509539140.png "image_1787509539140.png")
+![image_1787653537823.png](./image_1787653537823.png "image_1787653537823.png")
+![image_1787653549647.png](./image_1787653549647.png "image_1787653549647.png")
+![image_1787653564801.png](./image_1787653564801.png "image_1787653564801.png")
 
 ## Business Questions & Insights
 
